@@ -1,25 +1,13 @@
 package client;
 
 import common.Product;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import common.Utils;
+import java.awt.*;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
+import javax.swing.*;
+import shopping_cart.*;
 
 public class ClientGUI {
-
     private final JFrame frame;
     private final JTextField searchField;
     private final JButton btnSearch, btnViewCart, btnCheckout;
@@ -50,6 +38,10 @@ public class ClientGUI {
         frame.add(topPanel, BorderLayout.NORTH);
 
         drawProductTable(products);
+        
+        btnViewCart.addActionListener(l -> {
+            new CartGUI(new ShoppingCart());
+        });
 
         frame.setVisible(true);
     }
@@ -107,7 +99,8 @@ public class ClientGUI {
 
         c.gridx = 2;
         c.weightx = 0.3;
-        tablePanel.add(new JLabel(product.getFormattedPrice()), c);
+        final double price = product.getPrice();
+        tablePanel.add(new JLabel(Utils.formatPrice(price)), c);
 
         c.gridx = 3;
         c.weightx = 0.1;

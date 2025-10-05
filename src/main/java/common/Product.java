@@ -31,8 +31,4 @@ public class Product implements Serializable {
     public String getType() {
         return type;
     }
-
-    public String getFormattedPrice() {
-        return String.format("$%.2f", price);
-    }
 }
