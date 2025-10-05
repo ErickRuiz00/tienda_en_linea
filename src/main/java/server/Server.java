@@ -1,4 +1,4 @@
-package com.redes.tienda;
+package server;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,6 +8,7 @@ import java.net.*;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import common.Constants;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 

@@ -1,4 +1,4 @@
-package com.redes.tienda;
+package common;
 
 public class Constants {
     public static final String LIST_PRODUCTS = "LIST";

@@ -1,5 +1,6 @@
-package com.redes.tienda;
+package server;
 
+import common.Product;
 import java.io.Serializable;
 
 public class ProductStock implements Serializable {

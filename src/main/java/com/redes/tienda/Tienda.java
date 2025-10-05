@@ -1,5 +1,8 @@
 package com.redes.tienda;
 
+import common.Product;
+import client.ClientGUI;
+import client.Client;
 import java.util.ArrayList;
 
 public class Tienda {

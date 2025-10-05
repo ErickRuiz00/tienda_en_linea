@@ -1,4 +1,6 @@
-package com.redes.tienda;
+package shopping_cart;
+
+import common.Product;
 
 public class CartItem {
     final private Product product;

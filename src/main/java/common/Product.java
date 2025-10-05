@@ -1,4 +1,4 @@
-package com.redes.tienda;
+package common;
 
 import java.io.Serializable;
 

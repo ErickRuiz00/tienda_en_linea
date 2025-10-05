@@ -1,5 +1,8 @@
-package com.redes.tienda;
+package client;
 
+import common.Constants;
+import common.Product;
+import shopping_cart.ShoppingCart;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;

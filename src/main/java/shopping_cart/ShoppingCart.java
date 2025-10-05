@@ -1,6 +1,8 @@
-package com.redes.tienda;
+package shopping_cart;
 
 
+import common.Product;
+import shopping_cart.CartItem;
 import java.util.HashMap;
 import java.util.Map;
 
