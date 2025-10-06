@@ -13,8 +13,11 @@ public class ClientGUI {
     private final JTextField searchField;
     private final JButton btnSearch, btnViewCart, btnCheckout;
     private CartGUI cartDialog;
+    private ShoppingCart shoppingCart;
 
     public ClientGUI(ArrayList<Product> products) {
+        shoppingCart = new ShoppingCart();
+        
         frame = new JFrame("Tienda en línea");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
@@ -43,16 +46,7 @@ public class ClientGUI {
 
         btnViewCart.addActionListener(l -> {
             if (cartDialog == null || !cartDialog.isDisplayable()) {
-                final ShoppingCart test = new ShoppingCart();
-                final Product dummyProduct = new Product(0, "Algun nombre", "Algun tipo", 12.33);
-                final Product dummyProduct2 = new Product(1, "Nombre 2", "Tipo2", 133.2);
-                test.addProduct(dummyProduct);
-                test.addProduct(dummyProduct);
-                test.addProduct(dummyProduct);
-                test.addProduct(dummyProduct2);
-                test.addProduct(dummyProduct2);
-
-                cartDialog = new CartGUI(test);
+                cartDialog = new CartGUI(shoppingCart);
             } else {
                 cartDialog.requestFocus();
                 cartDialog.toFront();
@@ -122,6 +116,11 @@ public class ClientGUI {
         c.gridx = 3;
         c.weightx = 0.1;
         JButton btn = new JButton("Añadir");
+        
+        btn.addActionListener(l -> {
+            shoppingCart.addProduct(product);
+        });
+        
         btn.setPreferredSize(new Dimension(100, 25));
         tablePanel.add(btn, c);
     }
