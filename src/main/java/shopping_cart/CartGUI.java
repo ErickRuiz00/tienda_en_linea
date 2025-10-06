@@ -6,7 +6,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class CartGUI extends JFrame {
-    private ShoppingCart shoppingCart;
+
+    private final ShoppingCart shoppingCart;
     private JPanel tablePanel;
     private JLabel totalLabel;
 
@@ -18,7 +19,7 @@ public class CartGUI extends JFrame {
         } else {
             drawTable();
         }
-        
+
         setVisible(true);
     }
 
@@ -84,21 +85,48 @@ public class CartGUI extends JFrame {
         actions.add(addBtn);
         actions.add(reduceBtn);
         actions.add(removeBtn);
-        
+
+        addBtn.addActionListener(l -> {
+            shoppingCart.addProduct(product);
+            refreshTable();
+        });
+
+        reduceBtn.addActionListener(l -> {
+            shoppingCart.reduceProductQuantity(product);
+            refreshTable();
+        });
+
+        removeBtn.addActionListener(l -> {
+            shoppingCart.removeProduct(product);
+            refreshTable();
+        });
+
         row.add(actions);
 
         return row;
     }
-    
+
     private void displayEmptyAlert() {
         JPanel panel = new JPanel(new BorderLayout());
         JLabel label = new JLabel("Carrito vacio", SwingConstants.CENTER);
-        
+
         label.setFont(new Font("SansSerif", Font.PLAIN, 24));
         label.setForeground(Color.LIGHT_GRAY);
-        
+
         panel.add(label, BorderLayout.CENTER);
-        
+
         this.add(panel, BorderLayout.CENTER);
+    }
+
+    public void refreshTable() {
+        if (shoppingCart.getProductList().isEmpty()) {
+            tablePanel.removeAll();
+            displayEmptyAlert();
+        } else {
+            drawTable();
+        }
+        totalLabel.setText(Utils.formatPrice(shoppingCart.getTotal()));
+        tablePanel.revalidate();
+        tablePanel.repaint();
     }
 }
