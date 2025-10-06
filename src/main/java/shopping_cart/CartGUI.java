@@ -5,36 +5,38 @@ import common.Utils;
 import java.awt.*;
 import javax.swing.*;
 
-public class CartGUI {
-
+public class CartGUI extends JFrame {
     private ShoppingCart shoppingCart;
-    private JFrame frame;
     private JPanel tablePanel;
     private JLabel totalLabel;
 
     public CartGUI(ShoppingCart cart) {
         this.shoppingCart = cart;
         drawFrame();
-        drawTable();
-        frame.setVisible(true);
+        if (cart.getProductList().isEmpty()) {
+            displayEmptyAlert();
+        } else {
+            drawTable();
+        }
+        
+        setVisible(true);
     }
 
     private void drawFrame() {
-        frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(600, 400);
-        frame.setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(600, 400);
+        setLocationRelativeTo(null);
 
-        frame.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
         final double total = shoppingCart.getTotal();
         totalLabel = new JLabel(Utils.formatPrice(total));
         totalLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        frame.add(totalLabel, BorderLayout.SOUTH);
+        this.add(totalLabel, BorderLayout.SOUTH);
 
         tablePanel = new JPanel();
         tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(tablePanel);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 
     private void drawTable() {
@@ -78,11 +80,25 @@ public class CartGUI {
         JButton addBtn = new JButton("+");
         JButton reduceBtn = new JButton("-");
         JButton removeBtn = new JButton("Eliminar");
-        
+
         actions.add(addBtn);
         actions.add(reduceBtn);
         actions.add(removeBtn);
         
+        row.add(actions);
+
         return row;
+    }
+    
+    private void displayEmptyAlert() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel label = new JLabel("Carrito vacio", SwingConstants.CENTER);
+        
+        label.setFont(new Font("SansSerif", Font.PLAIN, 24));
+        label.setForeground(Color.LIGHT_GRAY);
+        
+        panel.add(label, BorderLayout.CENTER);
+        
+        this.add(panel, BorderLayout.CENTER);
     }
 }
