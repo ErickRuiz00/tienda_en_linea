@@ -17,14 +17,12 @@ public class CartGUI extends JFrame {
         this.shoppingCart = cart;
         this.client = client;
 
-        // --- 1. Configuración de la ventana principal ---
         setTitle("Carrito de Compras");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 450);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // --- 2. Panel inferior para el total ---
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         southPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         southPanel.add(new JLabel("Total:"));
@@ -33,22 +31,16 @@ public class CartGUI extends JFrame {
         southPanel.add(totalLabel);
         this.add(southPanel, BorderLayout.SOUTH);
 
-        // --- 3. Panel central para la tabla de productos ---
         tablePanel = new JPanel();
         JScrollPane scrollPane = new JScrollPane(tablePanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         this.add(scrollPane, BorderLayout.CENTER);
 
-        // --- 4. Dibujar el contenido inicial ---
         refreshUI();
 
         setVisible(true);
     }
 
-    /**
-     * Dibuja la tabla completa de productos en el carrito.
-     * Usa GridBagLayout para alinear todo correctamente.
-     */
     private void drawTable() {
         tablePanel.removeAll();
         tablePanel.setLayout(new GridBagLayout());
@@ -56,36 +48,28 @@ public class CartGUI extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 10, 5, 10);
 
-        // --- Fila 0: Cabecera de la tabla ---
         gbc.gridy = 0;
         addCartHeader(tablePanel, gbc);
 
-        // --- Filas siguientes: Productos del carrito ---
         int rowIndex = 1;
-        // La clave es el producto, el valor es la cantidad
         for (CartItem item : shoppingCart.getProductList().values()) {
             gbc.gridy = rowIndex;
             addProductRow(tablePanel, item, gbc);
             rowIndex++;
         }
         
-        // --- Componente de relleno: Empuja todo hacia arriba ---
         gbc.gridy = rowIndex;
-        gbc.weighty = 1.0; // Ocupa todo el espacio vertical sobrante
+        gbc.weighty = 1.0; 
         gbc.fill = GridBagConstraints.VERTICAL;
-        tablePanel.add(new JPanel(), gbc); // Panel vacío invisible
+        tablePanel.add(new JPanel(), gbc); 
     }
     
-    /**
-     * Crea la cabecera de la tabla.
-     */
     private void addCartHeader(JPanel panel, GridBagConstraints gbc) {
         String[] headers = {"Producto", "Cantidad", "Precio Unitario", "Subtotal", "Acciones"};
         Font headerFont = new Font("SansSerif", Font.BOLD, 14);
 
         for (int i = 0; i < headers.length; i++) {
             gbc.gridx = i;
-            // Define el ancho relativo de cada columna
             gbc.weightx = (i == 0) ? 0.40 : (i == 4) ? 0.25 : 0.15;
             
             JLabel label = new JLabel(headers[i], SwingConstants.CENTER);
@@ -94,30 +78,27 @@ public class CartGUI extends JFrame {
         }
     }
 
-    /**
-     * Crea una fila para un producto específico en la tabla.
-     */
     private void addProductRow(JPanel panel, CartItem item, GridBagConstraints gbc) {
         final Product product = item.getProduct();
         final int quantity = item.getQuantity();
-        // Columna 0: Nombre del Producto
+        // Nombre del Producto
         gbc.gridx = 0;
         panel.add(new JLabel(product.getName()), gbc);
 
-        // Columna 1: Cantidad
+        // Cantidad
         gbc.gridx = 1;
         panel.add(new JLabel(String.valueOf(quantity), SwingConstants.CENTER), gbc);
 
-        // Columna 2: Precio
+        // Precio
         gbc.gridx = 2;
         panel.add(new JLabel(Utils.formatPrice(product.getPrice()), SwingConstants.CENTER), gbc);
 
-        // Columna 3: Subtotal
+        // Subtotal
         gbc.gridx = 3;
         final double subtotal = product.getPrice() * quantity;
         panel.add(new JLabel(Utils.formatPrice(subtotal), SwingConstants.CENTER), gbc);
 
-        // Columna 4: Botones de Acción
+        // Botones de Acción
         gbc.gridx = 4;
         JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 0));
         JButton addBtn = new JButton("+");
@@ -160,9 +141,6 @@ public class CartGUI extends JFrame {
         panel.add(actionsPanel, gbc);
     }
     
-    /**
-     * Muestra un panel indicando que el carrito está vacío.
-     */
     private void displayEmptyCartMessage() {
         tablePanel.removeAll();
         tablePanel.setLayout(new BorderLayout());
@@ -172,9 +150,6 @@ public class CartGUI extends JFrame {
         tablePanel.add(label, BorderLayout.CENTER);
     }
 
-    /**
-     * Método central para refrescar toda la UI del carrito.
-     */
     public void refreshUI() {
         if (shoppingCart.isEmpty()) {
             displayEmptyCartMessage();
@@ -183,7 +158,6 @@ public class CartGUI extends JFrame {
         }
         totalLabel.setText(Utils.formatPrice(shoppingCart.getTotal()));
         
-        // Revalida y repinta el panel principal para asegurar que los cambios se muestren
         tablePanel.revalidate();
         tablePanel.repaint();
     }

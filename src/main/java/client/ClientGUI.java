@@ -5,7 +5,10 @@ import common.Utils;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import shopping_cart.*;
+import javax.swing.border.EmptyBorder;
+import shopping_cart.CartGUI;
+import shopping_cart.CartItem;
+import shopping_cart.ShoppingCart;
 
 public class ClientGUI {
 
@@ -13,76 +16,159 @@ public class ClientGUI {
     private final JTextField searchField;
     private final JButton btnSearch, btnViewCart, btnCheckout;
     private CartGUI cartDialog;
-    private ShoppingCart shoppingCart;
-    private Client client;
-
-    private JPanel productPanel;
+    private final ShoppingCart shoppingCart;
+    private final Client client;
+    private final JPanel productPanel;
 
     public ClientGUI(ArrayList<Product> products, Client client) {
-        shoppingCart = new ShoppingCart();
+        this.shoppingCart = new ShoppingCart();
         this.client = client;
 
-        frame = new JFrame("Tienda en línea");
+        frame = new JFrame("Tienda en Línea");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 500);
+        frame.setSize(750, 500);
         frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout(10, 10));
 
-        // --- Top panel: búsqueda y acciones ---
-        JPanel topPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel searchAndActionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+
         searchField = new JTextField(20);
+        searchField.putClientProperty("JTextField.placeholderText", "Buscar producto...");
         btnSearch = new JButton("Buscar");
-        searchPanel.add(searchField);
-        searchPanel.add(btnSearch);
 
-        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        btnViewCart = new JButton("Ver carrito");
-        btnCheckout = new JButton("Finalizar compra");
-        actionPanel.add(btnViewCart);
-        actionPanel.add(btnCheckout);
+        btnViewCart = new JButton("🛒 Ver Carrito");
+        btnCheckout = new JButton("✔ Finalizar Compra");
 
-        topPanel.add(searchPanel);
-        topPanel.add(actionPanel);
+        searchAndActionsPanel.add(new JLabel("Buscar:"));
+        searchAndActionsPanel.add(searchField);
+        searchAndActionsPanel.add(btnSearch);
+        searchAndActionsPanel.add(btnViewCart);
+        searchAndActionsPanel.add(btnCheckout);
+
+        topPanel.add(searchAndActionsPanel);
         frame.add(topPanel, BorderLayout.NORTH);
 
         productPanel = new JPanel();
         JScrollPane scrollPane = new JScrollPane(productPanel);
+        scrollPane.setBorder(BorderFactory.createEtchedBorder());
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        // Se llama para el dibujado inicial
-        drawProductTable(products);
+        setupActionListeners();
 
-        btnViewCart.addActionListener(l -> {
-            if (cartDialog == null || !cartDialog.isDisplayable()) {
-                cartDialog = new CartGUI(shoppingCart, this.client);
-            } else {
-                cartDialog.requestFocus();
-                cartDialog.toFront();
+        drawProductList(products);
+        frame.setVisible(true);
+    }
+
+    private void drawProductList(ArrayList<Product> productList) {
+        productPanel.removeAll();
+        productPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 10, 5, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridy = 0;
+        addHeaderRow(gbc);
+
+        int rowIndex = 1;
+        if (productList == null || productList.isEmpty()) {
+            displayNoProductsMessage(rowIndex);
+        } else {
+            for (Product p : productList) {
+                gbc.gridy = rowIndex;
+                addProductRow(p, rowIndex, gbc);
+                rowIndex++;
             }
+        }
+
+        gbc.gridy = rowIndex;
+        gbc.weighty = 1.0;
+        productPanel.add(new JPanel(), gbc);
+
+        productPanel.revalidate();
+        productPanel.repaint();
+    }
+
+    private void addHeaderRow(GridBagConstraints gbc) {
+        String[] headers = {"NOMBRE", "TIPO", "PRECIO", ""};
+        Font headerFont = new Font("SansSerif", Font.BOLD, 14);
+
+        for (int i = 0; i < headers.length; i++) {
+            gbc.gridx = i;
+            gbc.weightx = (i == 0) ? 0.4 : (i == 1) ? 0.3 : (i == 2) ? 0.2 : 0.1;
+            JLabel label = new JLabel(headers[i]);
+            label.setFont(headerFont);
+            productPanel.add(label, gbc);
+        }
+    }
+
+    private void addProductRow(Product product, int row, GridBagConstraints gbc) {
+        // Columna 0: Nombre
+        gbc.gridx = 0;
+        productPanel.add(new JLabel(product.getName()), gbc);
+
+        // Columna 1: Tipo
+        gbc.gridx = 1;
+        productPanel.add(new JLabel(product.getType()), gbc);
+
+        // Columna 2: Precio
+        gbc.gridx = 2;
+        productPanel.add(new JLabel(Utils.formatPrice(product.getPrice())), gbc);
+
+        // Columna 3: Botón
+        gbc.gridx = 3;
+        JButton addButton = new JButton("Añadir");
+        addButton.addActionListener(l -> {
+            if (client.addProduct(product)) {
+                shoppingCart.addProduct(product);
+            } else {
+                JOptionPane.showMessageDialog(frame, "No se pudo agregar. ¡Sin stock disponible!", "Producto no disponible", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        productPanel.add(addButton, gbc);
+    }
+
+    private void displayNoProductsMessage(int rowIndex) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = rowIndex;
+        gbc.gridwidth = 4;
+        gbc.insets = new Insets(20, 10, 20, 10);
+
+        JLabel label = new JLabel("No se encontraron productos", SwingConstants.CENTER);
+        label.setFont(new Font("SansSerif", Font.ITALIC, 16));
+        label.setForeground(Color.GRAY);
+        productPanel.add(label, gbc);
+    }
+
+    private void setupActionListeners() {
+        btnViewCart.addActionListener(l -> {
+            if (cartDialog != null) {
+                cartDialog.dispose();
+            }
+            cartDialog = new CartGUI(shoppingCart, this.client);
         });
 
         btnSearch.addActionListener(l -> {
             String term = searchField.getText();
-            if (term == null) {
-                term = "";
-            }
-
-            final ArrayList<Product> matches = client.searchProduct(term.trim());
-
-            drawProductTable(matches);
+            ArrayList<Product> matches = client.searchProduct(term.trim());
+            drawProductList(matches);
         });
 
         btnCheckout.addActionListener(l -> {
             if (shoppingCart.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Tu carrito esta vacio", "Carrito vacio", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Tu carrito está vacío.", "Carrito Vacío", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             StringBuilder confirmationMessage = new StringBuilder("¿Deseas finalizar tu compra?\n\nResumen:\n");
             for (CartItem item : shoppingCart.getProductList().values()) {
-                final Product p = item.getProduct();
-                confirmationMessage.append("- ").append(item.getQuantity() + "ud(s). ").append(p.getName()).append(" (" + Utils.formatPrice(p.getPrice()) + "c/u)\n");
+                Product p = item.getProduct();
+                int quantity = item.getQuantity();
+                confirmationMessage.append("- ").append(quantity).append("x ").append(p.getName())
+                        .append(" (").append(Utils.formatPrice(p.getPrice())).append(" c/u)\n");
             }
             confirmationMessage.append("\nTOTAL: ").append(Utils.formatPrice(shoppingCart.getTotal()));
 
@@ -99,91 +185,13 @@ public class ClientGUI {
 
                 if (purchaseSuccess) {
                     JOptionPane.showMessageDialog(frame, "¡Gracias por tu compra!", "Compra Exitosa", JOptionPane.INFORMATION_MESSAGE);
-                    shoppingCart.clearCart(); 
+                    shoppingCart.clearCart();
+
                 } else {
                     JOptionPane.showMessageDialog(frame, "Hubo un error al procesar tu compra. Es posible que el stock haya cambiado.", "Error en la Compra", JOptionPane.ERROR_MESSAGE);
                 }
+
             }
         });
-
-        frame.setVisible(true);
-    }
-
-    private void drawProductTable(ArrayList<Product> productList) {
-        productPanel.removeAll();
-        productPanel.setLayout(new GridBagLayout());
-        GridBagConstraints constrains = new GridBagConstraints();
-
-        constrains.fill = GridBagConstraints.HORIZONTAL;
-        constrains.weighty = 1;
-        constrains.insets = new Insets(5, 10, 5, 10);
-
-        Font headerFont = new Font("SansSerif", Font.BOLD, 16);
-
-        String[] headers = {"NOMBRE", "TIPO", "PRECIO", ""};
-        for (int i = 0; i < headers.length; i++) {
-            constrains.gridx = i;
-            constrains.gridy = 0;
-            constrains.weightx = (i == 3) ? 0.1 : 0.3;
-            JLabel label = new JLabel(headers[i]);
-            label.setFont(headerFont);
-            productPanel.add(label, constrains);
-        }
-
-        constrains.gridx = 0;
-        constrains.gridy = 1;
-        constrains.gridwidth = 4;
-        JSeparator sep = new JSeparator();
-        productPanel.add(sep, constrains);
-        constrains.gridwidth = 1;
-
-        int rowIndex = 2;
-        for (Product p : productList) {
-            addProductRow(productPanel, p, rowIndex++);
-        }
-
-        productPanel.revalidate();
-        productPanel.repaint();
-    }
-
-    private void addProductRow(JPanel panel, Product product, int row) {
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(5, 10, 5, 10);
-        c.weighty = 1;
-
-        c.gridx = 0;
-        c.gridy = row;
-        c.weightx = 0.3;
-        panel.add(new JLabel(product.getName()), c);
-
-        c.gridx = 1;
-        c.weightx = 0.3;
-        panel.add(new JLabel(product.getType()), c);
-
-        c.gridx = 2;
-        c.weightx = 0.3;
-        final double price = product.getPrice();
-        panel.add(new JLabel(Utils.formatPrice(price)), c);
-
-        c.gridx = 3;
-        c.weightx = 0.1;
-        JButton btn = new JButton("Añadir");
-
-        btn.addActionListener(l -> {
-            if (client.addProduct(product)) {
-                shoppingCart.addProduct(product);
-            } else {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No se pudo agregar el producto. ¡Sin stock Disponible!",
-                        "Producto no disponible",
-                        JOptionPane.WARNING_MESSAGE
-                );
-            }
-        });
-
-        btn.setPreferredSize(new Dimension(100, 25));
-        panel.add(btn, c);
     }
 }
