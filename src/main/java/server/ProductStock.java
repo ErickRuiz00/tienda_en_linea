@@ -8,6 +8,8 @@ public class ProductStock implements Serializable {
     private int stock;
     private Product product;
 
+    public ProductStock(){};
+    
     public ProductStock(int stock, Product product) {
         this.stock = stock;
         this.product = product;
@@ -21,11 +23,19 @@ public class ProductStock implements Serializable {
         return stock;
     }
 
-    public void decreaseStock(int quantity) {
-        if (quantity > stock) {
-            stock = 0;
-        } else {
-            stock -= quantity;
-        }
+    public void decreaseStock() {
+        if (stock > 0) stock--;
     }
+    
+    public void increaseStock() {
+        stock++;
+    }
+    
+    public void increaseStock(int quantity) {
+        stock += quantity;
+    }
+    
+    public Boolean isAvailable() {
+        return stock > 0;
+    }    
 }

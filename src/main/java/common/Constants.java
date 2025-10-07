@@ -7,4 +7,7 @@ public class Constants {
     public static final String REMOVE_PRODUCT = "REMOVE";
     public static final String CLEAR = "CLEAR";
     public static final String CHECKOUT = "CHECKOUT";
+    
+    public static final String APPROVE = "APRROVE";
+public static final String DENY = "DENY";
 }
