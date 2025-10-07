@@ -139,7 +139,7 @@ public class Server {
             final int productId = (int) ois.readObject();
             final ProductStock ps = getProductById(productId);
             
-            if (ps == null || !ps.isAvailable()) {
+            if (ps == null) {
                 oos.writeObject(Constants.DENY);
                 oos.flush();
                 return;

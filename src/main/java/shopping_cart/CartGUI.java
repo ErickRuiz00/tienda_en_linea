@@ -105,8 +105,10 @@ public class CartGUI extends JFrame {
         });
 
         reduceBtn.addActionListener(l -> {
-            shoppingCart.reduceProductQuantity(product);
-            refreshTable();
+            if (client.reduceProduct(product)) {
+                shoppingCart.reduceProductQuantity(product);
+                refreshTable();
+            }
         });
 
         removeBtn.addActionListener(l -> {
