@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 public class Server {
 
@@ -84,6 +85,7 @@ public class Server {
                 }
                 case Constants.REMOVE_PRODUCT -> {
                     System.out.println("Deleting Product");
+                    handleDelete();
                 }
                 case Constants.CLEAR -> {
                     System.out.println("Cleaning Cart");
@@ -116,8 +118,8 @@ public class Server {
 
     private static void handleAdd() {
         try {
-            final int productId = (int) ois.readObject();
-            
+            final int productId = (Integer) ois.readObject();
+
             final ProductStock ps = getProductById(productId);
 
             if (ps == null || !ps.isAvailable()) {
@@ -125,26 +127,26 @@ public class Server {
                 oos.flush();
                 return;
             }
-            
+
             ps.decreaseStock();
             oos.writeObject(Constants.APPROVE);
             oos.flush();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error en manejador de adicion");
-        }   
+        }
     }
 
     private static void handleReduce() {
         try {
-            final int productId = (int) ois.readObject();
+            final int productId = (Integer) ois.readObject();
             final ProductStock ps = getProductById(productId);
-            
+
             if (ps == null) {
                 oos.writeObject(Constants.DENY);
                 oos.flush();
                 return;
             }
-            
+
             ps.increaseStock();
             oos.writeObject(Constants.APPROVE);
             oos.flush();
@@ -152,7 +154,28 @@ public class Server {
             System.out.println("Error en el manejador de reduccion");
         }
     }
-    
+
+    private static void handleDelete() {
+        try {
+            final Map<String, Object> map = (Map<String, Object>) ois.readObject();
+            final int productId = (Integer) map.get("productId");
+            final int quantity = (Integer) map.get("quantity");
+            final ProductStock ps = getProductById(productId);
+
+            if (ps == null) {
+                oos.writeObject(Constants.DENY);
+                oos.flush();
+                return;
+            }
+
+            ps.increaseStock(quantity);
+            oos.writeObject(Constants.APPROVE);
+            oos.flush();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error en el manejador de delete");
+        }
+    }
+
     private static ProductStock getProductById(int productId) {
         for (ProductStock ps : stock) {
             final int id = ps.getProduct().getProductId();

@@ -112,8 +112,10 @@ public class CartGUI extends JFrame {
         });
 
         removeBtn.addActionListener(l -> {
-            shoppingCart.removeProduct(product);
-            refreshTable();
+            if (client.removeProduct(item)) {
+                shoppingCart.removeProduct(product);
+                refreshTable();
+            }
         });
 
         row.add(actions);

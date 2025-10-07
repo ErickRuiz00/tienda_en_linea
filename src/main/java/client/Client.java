@@ -8,6 +8,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import shopping_cart.CartItem;
 
 public class Client {
 
@@ -71,13 +74,22 @@ public class Client {
         }
     }
 
-    public void removeProduct(Product product) {
+    public Boolean removeProduct(CartItem item) {
         try {
             oos.writeObject(Constants.REMOVE_PRODUCT);
             oos.flush();
-            Thread.sleep(2000);
-
-        } catch (Exception e) {
+            
+            final Map<String, Object> map = new HashMap<>();
+            
+            map.put("productId", item.getProduct().getProductId());
+            map.put("quantity", item.getQuantity());
+            
+            oos.writeObject(map);
+            oos.flush();
+            
+            return ois.readObject().equals(Constants.APPROVE);
+        } catch (IOException | ClassNotFoundException e) {
+            return false;
         }
     }
 
