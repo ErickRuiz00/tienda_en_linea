@@ -19,6 +19,7 @@ public class Server {
     private static ArrayList<ProductStock> stock;
     private static ObjectOutputStream oos;
     private static ObjectInputStream ois;
+    private static Socket client;
 
     public static void main(String[] args) {
         try {
@@ -28,7 +29,7 @@ public class Server {
 
             loadProducts();
             for (;;) {
-                Socket client = server.accept();
+                client = server.accept();
 
                 oos = new ObjectOutputStream(client.getOutputStream());
                 ois = new ObjectInputStream(client.getInputStream());
@@ -97,6 +98,10 @@ public class Server {
                 case Constants.SEARCH -> {
                     System.out.println("Searching product...");
                     handleSearch();
+                }
+                case Constants.CLOSE -> {
+                    System.out.println("Finalizando comunicacion");
+                    handleClose();
                 }
 
                 default ->
@@ -220,6 +225,15 @@ public class Server {
         }
     }
 
+    private static void handleClose() {
+        try {
+            oos.close();
+            ois.close();
+            client.close();
+        } catch (Exception e) {
+        }
+    }
+    
     private static ProductStock getProductById(int productId) {
         for (ProductStock ps : stock) {
             final int id = ps.getProduct().getProductId();

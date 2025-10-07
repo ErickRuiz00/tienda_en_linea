@@ -1,6 +1,7 @@
 package common;
 
 public class Constants {
+
     public static final String LIST_PRODUCTS = "LIST";
     public static final String ADD_PRODUCT = "ADD";
     public static final String REDUCE_PRODUCT = "REDUCE";
@@ -8,7 +9,8 @@ public class Constants {
     public static final String CLEAR = "CLEAR";
     public static final String CHECKOUT = "CHECKOUT";
     public static final String SEARCH = "SEARCH";
-    
+    public static final String CLOSE = "CLOSE";
+
     public static final String APPROVE = "APRROVE";
-public static final String DENY = "DENY";
+    public static final String DENY = "DENY";
 }

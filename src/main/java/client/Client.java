@@ -32,6 +32,25 @@ public class Client {
         }
     }
 
+    public void closeConnection() {
+        try {
+            oos.writeObject(Constants.CLOSE);
+            oos.flush();
+            
+            if (oos != null) {
+                oos.close();
+            }
+            if (ois != null) {
+                ois.close();
+            }
+            if (client != null) {
+                client.close();
+            }
+            System.out.println("Conexion finalizada");
+        } catch (IOException e) {
+        }
+    }
+    
     public ArrayList<Product> listProducts() {
         try {
             oos.writeObject(Constants.LIST_PRODUCTS);

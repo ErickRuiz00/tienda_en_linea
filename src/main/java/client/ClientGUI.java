@@ -3,6 +3,7 @@ package client;
 import common.Product;
 import common.Utils;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,6 +26,15 @@ public class ClientGUI {
         this.client = client;
 
         frame = new JFrame("Tienda en Línea");
+        
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                client.closeConnection();
+                super.windowClosing(e); 
+            }
+        });
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(750, 500);
         frame.setLocationRelativeTo(null);
