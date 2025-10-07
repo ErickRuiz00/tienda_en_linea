@@ -14,10 +14,12 @@ public class ClientGUI {
     private final JButton btnSearch, btnViewCart, btnCheckout;
     private CartGUI cartDialog;
     private ShoppingCart shoppingCart;
+    private Client client;
 
-    public ClientGUI(ArrayList<Product> products) {
+    public ClientGUI(ArrayList<Product> products, Client client) {
         shoppingCart = new ShoppingCart();
-        
+        this.client = client;
+
         frame = new JFrame("Tienda en línea");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
@@ -116,11 +118,21 @@ public class ClientGUI {
         c.gridx = 3;
         c.weightx = 0.1;
         JButton btn = new JButton("Añadir");
-        
+
         btn.addActionListener(l -> {
-            shoppingCart.addProduct(product);
+            if (client.addProduct(product)) {
+                shoppingCart.addProduct(product);
+            } else {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No se pudo agregar el producto. ¡Sin stock Disponible!", 
+                        "Producto no disponible", 
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+
         });
-        
+
         btn.setPreferredSize(new Dimension(100, 25));
         tablePanel.add(btn, c);
     }

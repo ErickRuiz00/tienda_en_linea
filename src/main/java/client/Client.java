@@ -37,19 +37,23 @@ public class Client {
             ArrayList<Product> products = (ArrayList<Product>)ois.readObject();
 
             return products != null ? products : new ArrayList<>();
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("Exception");
             return new ArrayList<>();
         }
     }
 
-    public void addProduct(Product product) {
+    public Boolean addProduct(Product product) {
         try {
             oos.writeObject(Constants.ADD_PRODUCT);
             oos.flush();
-            Thread.sleep(2000);
 
-        } catch (Exception e) {
+            oos.writeObject(product.getProductId());
+            oos.flush();
+            
+            return ois.readObject().equals(Constants.APPROVE);
+        } catch (IOException | ClassNotFoundException e) {
+            return false;
         }
     }
 

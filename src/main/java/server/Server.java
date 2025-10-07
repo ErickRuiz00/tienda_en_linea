@@ -18,9 +18,9 @@ import java.lang.reflect.Type;
 
 public class Server {
 
-    static private ArrayList<ProductStock> stock;
-    static private ObjectOutputStream oos;
-    static private ObjectInputStream ois;
+    private static ArrayList<ProductStock> stock;
+    private static ObjectOutputStream oos;
+    private static ObjectInputStream ois;
 
     public static void main(String[] args) {
         try {
@@ -42,7 +42,7 @@ public class Server {
         }
     }
 
-    static private void loadProducts() {
+    private static void loadProducts() {
         try {
             Gson gson = new Gson();
 
@@ -67,18 +67,19 @@ public class Server {
 
     private static void handleRequests() throws Exception {
         while (true) {
-            String msg =  (String) ois.readObject();
+            String msg = (String) ois.readObject();
             if (msg == null) {
                 continue;
             }
 
             switch (msg) {
                 case Constants.LIST_PRODUCTS -> {
-                    System.out.println("Sending Products");
+                    System.out.println("Handle Listing...");
                     sendProductList();
                 }
                 case Constants.ADD_PRODUCT -> {
-                    System.out.println("Checking Stock");
+                    System.out.println("Handle Adding...");
+                    handleAdd();
                 }
                 case Constants.REDUCE_PRODUCT -> {
                     System.out.println("Updating Stock");
@@ -100,19 +101,50 @@ public class Server {
     private static void sendProductList() {
         try {
             ArrayList<Product> products = new ArrayList<>();
-            
+
             for (ProductStock ps : stock) {
                 products.add(ps.getProduct());
             }
-            
+
             oos.writeObject(products);
             oos.flush();
-            
+
             System.out.println("Lista de productos enviada!");
         } catch (IOException e) {
             System.out.println("Ocurrio un error al enviar los productos");
         }
-        
-        
+
+    }
+
+    private static void handleAdd() {
+        try {
+            final int productId = (int) ois.readObject();
+            
+            final ProductStock ps = getProductById(productId);
+
+            if (ps == null || !ps.isAvailable()) {
+                oos.writeObject(Constants.DENY);
+                oos.flush();
+                return;
+            }
+            
+            ps.decreaseStock();
+            oos.writeObject(Constants.APPROVE);
+            oos.flush();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error en manejador de adicion");
+        }   
+    }
+
+    private static ProductStock getProductById(int productId) {
+        for (ProductStock ps : stock) {
+            final int id = ps.getProduct().getProductId();
+
+            if (id == productId) {
+                return ps;
+            }
+        }
+
+        return null;
     }
 }

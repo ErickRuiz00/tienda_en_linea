@@ -1,29 +1,50 @@
-[
-    {
-        "stock": 10,
-        "product": {
-            "product_id": 0,
-            "name": "Desk Organizer Set",
-            "type": "Office",
-            "price": 29.99
-        }
-    },
-    {
-        "stock": 5,
-        "product": {
-            "product_id": 1,
-            "name": "Mediterranean Chickpea Salad",
-            "type": "Food - Salads",
-            "price": 5.99
-        }
-    },
-    {
-        "stock": 12,
-        "product": {
-            "product_id": 2,
-            "name": "Bluetooth Wireless Mouse",
-            "type": "Electronics",
-            "price": 19.49
-        }
-    }
-]
+[{"stock":38,"product":{"product_id":872,"name":"Induction Cooktop","type":"Office","price":955.25}},
+{"stock":83,"product":{"product_id":178,"name":"Pet Grooming Brush","type":"Electronics","price":544.62}},
+{"stock":17,"product":{"product_id":878,"name":"Honey Glazed Carrots","type":"Accessories","price":242.67}},
+{"stock":71,"product":{"product_id":771,"name":"Children's Educational Puzzle","type":"Clothing","price":495.8}},
+{"stock":76,"product":{"product_id":38,"name":"Almond Flour Biscuits","type":"Clothing","price":925.2}},
+{"stock":87,"product":{"product_id":142,"name":"Kale and Quinoa Salad","type":"Home","price":620.7}},
+{"stock":46,"product":{"product_id":38,"name":"Chic Ankle Strap Heels","type":"Electronics","price":735.86}},
+{"stock":30,"product":{"product_id":587,"name":"Pesto Pasta Salad","type":"Accessories","price":178.96}},
+{"stock":24,"product":{"product_id":297,"name":"Elegant Lace Dress","type":"Clothing","price":745.34}},
+{"stock":67,"product":{"product_id":611,"name":"Rustic Wooden Picture Frame","type":"Office","price":772.65}},
+{"stock":7,"product":{"product_id":970,"name":"Thai Peanut Dressing","type":"Accessories","price":903.08}},
+{"stock":33,"product":{"product_id":76,"name":"Smoked Paprika Chicken Thighs","type":"Clothing","price":592.47}},
+{"stock":27,"product":{"product_id":600,"name":"Italian Herb Balsamic Marinade","type":"Home","price":53.2}},
+{"stock":84,"product":{"product_id":973,"name":"Comfy Slippers","type":"Accessories","price":882.61}},
+{"stock":78,"product":{"product_id":427,"name":"Professional Chef Knife","type":"Electronics","price":957.91}},
+{"stock":21,"product":{"product_id":237,"name":"Buffalo Cauliflower Wings","type":"Office","price":861.03}},
+{"stock":10,"product":{"product_id":416,"name":"Set of Decorative Storage Bins","type":"Accessories","price":354.38}},
+{"stock":29,"product":{"product_id":148,"name":"Collapsible Colander","type":"Office","price":835.02}},
+{"stock":82,"product":{"product_id":56,"name":"Mediterranean Chickpea Bowl","type":"Clothing","price":339.23}},
+{"stock":15,"product":{"product_id":35,"name":"Ethical Wool Scarf","type":"Accessories","price":445.47}},
+{"stock":18,"product":{"product_id":346,"name":"Pineapple Chunks (canned)","type":"Home","price":529.5}},
+{"stock":86,"product":{"product_id":228,"name":"Teriyaki Chicken Wings","type":"Clothing","price":156.53}},
+{"stock":100,"product":{"product_id":531,"name":"Lentil Soup (canned)","type":"Clothing","price":77.9}},
+{"stock":48,"product":{"product_id":84,"name":"Pumpkin Seeds","type":"Electronics","price":242.75}},
+{"stock":71,"product":{"product_id":446,"name":"Chocolate Covered Pretzels","type":"Electronics","price":989.35}},
+{"stock":0,"product":{"product_id":363,"name":"Carrot Sticks","type":"Accessories","price":860.08}},
+{"stock":39,"product":{"product_id":155,"name":"Oats","type":"Accessories","price":994.05}},
+{"stock":1,"product":{"product_id":851,"name":"Greek Yogurt","type":"Home","price":381.08}},
+{"stock":99,"product":{"product_id":114,"name":"Safety Pin Dispenser","type":"Home","price":125.58}},
+{"stock":21,"product":{"product_id":704,"name":"Canned Sardines","type":"Home","price":494.93}},
+{"stock":41,"product":{"product_id":600,"name":"Canned Sardines","type":"Accessories","price":260.13}},
+{"stock":100,"product":{"product_id":3,"name":"Vegetable and Cheese Quesadillas","type":"Home","price":174.52}},
+{"stock":64,"product":{"product_id":101,"name":"Chopping Board","type":"Electronics","price":127.13}},
+{"stock":98,"product":{"product_id":558,"name":"Foam Roller for Muscle Recovery","type":"Accessories","price":917.57}},
+{"stock":21,"product":{"product_id":752,"name":"Foot Spa Bath Massager","type":"Office","price":798.58}},
+{"stock":86,"product":{"product_id":738,"name":"Asian Salad Mix","type":"Home","price":978.05}},
+{"stock":28,"product":{"product_id":655,"name":"Cotton Tote Bag Set","type":"Electronics","price":252.07}},
+{"stock":0,"product":{"product_id":256,"name":"Suede Ankle Booties","type":"Office","price":768.7}},
+{"stock":46,"product":{"product_id":773,"name":"Apple Pie Filling","type":"Office","price":536.85}},
+{"stock":58,"product":{"product_id":548,"name":"Chocolate Fudge Ice Cream","type":"Home","price":53.33}},
+{"stock":56,"product":{"product_id":795,"name":"Organic Granola Cereal","type":"Electronics","price":485.49}},
+{"stock":13,"product":{"product_id":425,"name":"Outdoor Fire Pit","type":"Clothing","price":966.43}},
+{"stock":80,"product":{"product_id":416,"name":"Organic Granola Cereal","type":"Office","price":879.96}},
+{"stock":78,"product":{"product_id":581,"name":"Self-Massaging Pillow","type":"Accessories","price":288.46}},
+{"stock":80,"product":{"product_id":27,"name":"Sriracha Honey Glaze","type":"Office","price":878.26}},
+{"stock":9,"product":{"product_id":917,"name":"Pet Camera with Treat Dispenser","type":"Electronics","price":299.62}},
+{"stock":22,"product":{"product_id":917,"name":"Salsa","type":"Electronics","price":191.29}},
+{"stock":79,"product":{"product_id":896,"name":"Fruit & Nut Trail Mix","type":"Electronics","price":655.66}},
+{"stock":95,"product":{"product_id":514,"name":"Crispy Onion Rings","type":"Home","price":926.05}},
+{"stock":16,"product":{"product_id":726,"name":"Lightweight Workout Tank","type":"Electronics","price":411.24}}]

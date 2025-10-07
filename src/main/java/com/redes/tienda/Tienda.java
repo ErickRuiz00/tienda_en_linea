@@ -12,6 +12,6 @@ public class Tienda {
 
       final ArrayList<Product> productList = client.listProducts();
 
-      new ClientGUI(productList);
+      new ClientGUI(productList, client);
   }  
 }
