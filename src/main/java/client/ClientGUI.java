@@ -16,7 +16,7 @@ public class ClientGUI {
     private ShoppingCart shoppingCart;
     private Client client;
 
-    private JPanel productPanel; 
+    private JPanel productPanel;
 
     public ClientGUI(ArrayList<Product> products, Client client) {
         shoppingCart = new ShoppingCart();
@@ -61,16 +61,49 @@ public class ClientGUI {
                 cartDialog.toFront();
             }
         });
-        
+
         btnSearch.addActionListener(l -> {
             String term = searchField.getText();
             if (term == null) {
                 term = "";
             }
-            
+
             final ArrayList<Product> matches = client.searchProduct(term.trim());
-            
+
             drawProductTable(matches);
+        });
+
+        btnCheckout.addActionListener(l -> {
+            if (shoppingCart.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Tu carrito esta vacio", "Carrito vacio", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            StringBuilder confirmationMessage = new StringBuilder("¿Deseas finalizar tu compra?\n\nResumen:\n");
+            for (CartItem item : shoppingCart.getProductList().values()) {
+                final Product p = item.getProduct();
+                confirmationMessage.append("- ").append(item.getQuantity() + "ud(s). ").append(p.getName()).append(" (" + Utils.formatPrice(p.getPrice()) + "c/u)\n");
+            }
+            confirmationMessage.append("\nTOTAL: ").append(Utils.formatPrice(shoppingCart.getTotal()));
+
+            int response = JOptionPane.showConfirmDialog(
+                    frame,
+                    confirmationMessage.toString(),
+                    "Confirmar Compra",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (response == JOptionPane.YES_OPTION) {
+                boolean purchaseSuccess = client.goToCheckout();
+
+                if (purchaseSuccess) {
+                    JOptionPane.showMessageDialog(frame, "¡Gracias por tu compra!", "Compra Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    shoppingCart.clearCart(); 
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Hubo un error al procesar tu compra. Es posible que el stock haya cambiado.", "Error en la Compra", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
 
         frame.setVisible(true);
@@ -113,7 +146,7 @@ public class ClientGUI {
         productPanel.repaint();
     }
 
-    private void addProductRow(JPanel panel, Product product, int row) { 
+    private void addProductRow(JPanel panel, Product product, int row) {
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(5, 10, 5, 10);
@@ -143,8 +176,8 @@ public class ClientGUI {
             } else {
                 JOptionPane.showMessageDialog(
                         null,
-                        "No se pudo agregar el producto. ¡Sin stock Disponible!", 
-                        "Producto no disponible", 
+                        "No se pudo agregar el producto. ¡Sin stock Disponible!",
+                        "Producto no disponible",
                         JOptionPane.WARNING_MESSAGE
                 );
             }

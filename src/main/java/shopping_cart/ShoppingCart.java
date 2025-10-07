@@ -12,6 +12,10 @@ public class ShoppingCart {
         productList = new HashMap<>();
         total = 0;
     }
+    
+    public Boolean isEmpty() {
+        return productList.isEmpty();
+    }
 
     public Map<Integer, CartItem> getProductList() {
         return productList;

@@ -102,7 +102,7 @@ public class Client {
             oos.flush();
 
             ArrayList<Product> products = (ArrayList<Product>) ois.readObject();
-            
+
             return products != null ? products : new ArrayList<>();
         } catch (IOException | ClassNotFoundException e) {
             return new ArrayList<>();
@@ -119,13 +119,14 @@ public class Client {
         }
     }
 
-    public void goToCheckout(Product product) {
+    public Boolean goToCheckout() {
         try {
             oos.writeObject(Constants.CHECKOUT);
             oos.flush();
-            Thread.sleep(2000);
 
-        } catch (Exception e) {
+            return ois.readObject().equals(Constants.APPROVE);
+        } catch (IOException | ClassNotFoundException e) {
+            return false;
         }
     }
 }
