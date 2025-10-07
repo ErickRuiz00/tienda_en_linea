@@ -57,11 +57,17 @@ public class Client {
         }
     }
 
-    public void reduceProduct(Product product) {
+    public Boolean reduceProduct(Product product) {
         try {
             oos.writeObject(Constants.REDUCE_PRODUCT);
             oos.flush();
-        } catch (Exception e) {
+            
+            oos.writeObject(product.getProductId());
+            oos.flush();
+            
+            return ois.readObject().equals(Constants.APPROVE);
+        } catch (IOException | ClassNotFoundException e) {
+            return false;
         }
     }
 

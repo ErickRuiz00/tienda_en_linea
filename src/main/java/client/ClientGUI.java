@@ -48,7 +48,7 @@ public class ClientGUI {
 
         btnViewCart.addActionListener(l -> {
             if (cartDialog == null || !cartDialog.isDisplayable()) {
-                cartDialog = new CartGUI(shoppingCart);
+                cartDialog = new CartGUI(shoppingCart, this.client);
             } else {
                 cartDialog.requestFocus();
                 cartDialog.toFront();

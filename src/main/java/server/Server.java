@@ -1,9 +1,6 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.*;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -83,6 +80,7 @@ public class Server {
                 }
                 case Constants.REDUCE_PRODUCT -> {
                     System.out.println("Updating Stock");
+                    handleReduce();
                 }
                 case Constants.REMOVE_PRODUCT -> {
                     System.out.println("Deleting Product");
@@ -136,6 +134,25 @@ public class Server {
         }   
     }
 
+    private static void handleReduce() {
+        try {
+            final int productId = (int) ois.readObject();
+            final ProductStock ps = getProductById(productId);
+            
+            if (ps == null || !ps.isAvailable()) {
+                oos.writeObject(Constants.DENY);
+                oos.flush();
+                return;
+            }
+            
+            ps.increaseStock();
+            oos.writeObject(Constants.APPROVE);
+            oos.flush();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error en el manejador de reduccion");
+        }
+    }
+    
     private static ProductStock getProductById(int productId) {
         for (ProductStock ps : stock) {
             final int id = ps.getProduct().getProductId();

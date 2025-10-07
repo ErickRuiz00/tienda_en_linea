@@ -1,5 +1,6 @@
 package shopping_cart;
 
+import client.Client;
 import common.Product;
 import common.Utils;
 import java.awt.*;
@@ -10,9 +11,11 @@ public class CartGUI extends JFrame {
     private final ShoppingCart shoppingCart;
     private JPanel tablePanel;
     private JLabel totalLabel;
+    private Client client;
 
-    public CartGUI(ShoppingCart cart) {
+    public CartGUI(ShoppingCart cart, Client client) {
         this.shoppingCart = cart;
+        this.client = client;
         drawFrame();
         if (cart.getProductList().isEmpty()) {
             displayEmptyAlert();
@@ -87,8 +90,18 @@ public class CartGUI extends JFrame {
         actions.add(removeBtn);
 
         addBtn.addActionListener(l -> {
-            shoppingCart.addProduct(product);
-            refreshTable();
+            if (client.addProduct(product)) {
+                shoppingCart.addProduct(product);
+                refreshTable();
+                return;
+            }
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No se pudo agregar el producto. ¡Sin stock Disponible!",
+                    "Producto no disponible",
+                    JOptionPane.WARNING_MESSAGE
+            );
         });
 
         reduceBtn.addActionListener(l -> {
