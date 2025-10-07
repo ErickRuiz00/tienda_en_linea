@@ -37,7 +37,7 @@ public class Client {
             oos.writeObject(Constants.LIST_PRODUCTS);
             oos.flush();
 
-            ArrayList<Product> products = (ArrayList<Product>)ois.readObject();
+            ArrayList<Product> products = (ArrayList<Product>) ois.readObject();
 
             return products != null ? products : new ArrayList<>();
         } catch (IOException | ClassNotFoundException e) {
@@ -53,7 +53,7 @@ public class Client {
 
             oos.writeObject(product.getProductId());
             oos.flush();
-            
+
             return ois.readObject().equals(Constants.APPROVE);
         } catch (IOException | ClassNotFoundException e) {
             return false;
@@ -64,10 +64,10 @@ public class Client {
         try {
             oos.writeObject(Constants.REDUCE_PRODUCT);
             oos.flush();
-            
+
             oos.writeObject(product.getProductId());
             oos.flush();
-            
+
             return ois.readObject().equals(Constants.APPROVE);
         } catch (IOException | ClassNotFoundException e) {
             return false;
@@ -78,18 +78,34 @@ public class Client {
         try {
             oos.writeObject(Constants.REMOVE_PRODUCT);
             oos.flush();
-            
+
             final Map<String, Object> map = new HashMap<>();
-            
+
             map.put("productId", item.getProduct().getProductId());
             map.put("quantity", item.getQuantity());
-            
+
             oos.writeObject(map);
             oos.flush();
-            
+
             return ois.readObject().equals(Constants.APPROVE);
         } catch (IOException | ClassNotFoundException e) {
             return false;
+        }
+    }
+
+    public ArrayList<Product> searchProduct(String term) {
+        try {
+            oos.writeObject(Constants.SEARCH);
+            oos.flush();
+
+            oos.writeObject(term);
+            oos.flush();
+
+            ArrayList<Product> products = (ArrayList<Product>) ois.readObject();
+            
+            return products != null ? products : new ArrayList<>();
+        } catch (IOException | ClassNotFoundException e) {
+            return new ArrayList<>();
         }
     }
 

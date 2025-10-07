@@ -16,6 +16,8 @@ public class ClientGUI {
     private ShoppingCart shoppingCart;
     private Client client;
 
+    private JPanel productPanel; 
+
     public ClientGUI(ArrayList<Product> products, Client client) {
         shoppingCart = new ShoppingCart();
         this.client = client;
@@ -44,6 +46,11 @@ public class ClientGUI {
         topPanel.add(actionPanel);
         frame.add(topPanel, BorderLayout.NORTH);
 
+        productPanel = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(productPanel);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        // Se llama para el dibujado inicial
         drawProductTable(products);
 
         btnViewCart.addActionListener(l -> {
@@ -53,14 +60,25 @@ public class ClientGUI {
                 cartDialog.requestFocus();
                 cartDialog.toFront();
             }
-
+        });
+        
+        btnSearch.addActionListener(l -> {
+            String term = searchField.getText();
+            if (term == null) {
+                term = "";
+            }
+            
+            final ArrayList<Product> matches = client.searchProduct(term.trim());
+            
+            drawProductTable(matches);
         });
 
         frame.setVisible(true);
     }
 
     private void drawProductTable(ArrayList<Product> productList) {
-        JPanel tablePanel = new JPanel(new GridBagLayout());
+        productPanel.removeAll();
+        productPanel.setLayout(new GridBagLayout());
         GridBagConstraints constrains = new GridBagConstraints();
 
         constrains.fill = GridBagConstraints.HORIZONTAL;
@@ -76,26 +94,26 @@ public class ClientGUI {
             constrains.weightx = (i == 3) ? 0.1 : 0.3;
             JLabel label = new JLabel(headers[i]);
             label.setFont(headerFont);
-            tablePanel.add(label, constrains);
+            productPanel.add(label, constrains);
         }
 
         constrains.gridx = 0;
         constrains.gridy = 1;
         constrains.gridwidth = 4;
         JSeparator sep = new JSeparator();
-        tablePanel.add(sep, constrains);
+        productPanel.add(sep, constrains);
         constrains.gridwidth = 1;
 
         int rowIndex = 2;
         for (Product p : productList) {
-            addProductRow(tablePanel, p, rowIndex++);
+            addProductRow(productPanel, p, rowIndex++);
         }
 
-        JScrollPane scrollPane = new JScrollPane(tablePanel);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        productPanel.revalidate();
+        productPanel.repaint();
     }
 
-    private void addProductRow(JPanel tablePanel, Product product, int row) {
+    private void addProductRow(JPanel panel, Product product, int row) { 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(5, 10, 5, 10);
@@ -104,16 +122,16 @@ public class ClientGUI {
         c.gridx = 0;
         c.gridy = row;
         c.weightx = 0.3;
-        tablePanel.add(new JLabel(product.getName()), c);
+        panel.add(new JLabel(product.getName()), c);
 
         c.gridx = 1;
         c.weightx = 0.3;
-        tablePanel.add(new JLabel(product.getType()), c);
+        panel.add(new JLabel(product.getType()), c);
 
         c.gridx = 2;
         c.weightx = 0.3;
         final double price = product.getPrice();
-        tablePanel.add(new JLabel(Utils.formatPrice(price)), c);
+        panel.add(new JLabel(Utils.formatPrice(price)), c);
 
         c.gridx = 3;
         c.weightx = 0.1;
@@ -130,11 +148,9 @@ public class ClientGUI {
                         JOptionPane.WARNING_MESSAGE
                 );
             }
-
         });
 
         btn.setPreferredSize(new Dimension(100, 25));
-        tablePanel.add(btn, c);
+        panel.add(btn, c);
     }
-
 }

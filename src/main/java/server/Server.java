@@ -90,8 +90,14 @@ public class Server {
                 case Constants.CLEAR -> {
                     System.out.println("Cleaning Cart");
                 }
-                case Constants.CHECKOUT ->
+                case Constants.CHECKOUT -> {
                     System.out.println("Go to Checkout");
+                }
+                case Constants.SEARCH -> {
+                    System.out.println("Searching product...");
+                    handleSearch();
+                }
+                    
                 default ->
                     System.out.println("Solicitud no valida");
             }
@@ -176,6 +182,32 @@ public class Server {
         }
     }
 
+    private static void handleSearch() {
+        try {
+            final String term = (String) ois.readObject();
+            final String lowerCaseTerm = term.toLowerCase();
+            final ArrayList<Product> matches = new ArrayList<>();
+            
+            System.out.println("Buscando producto con termino " + lowerCaseTerm);
+            
+            for (ProductStock ps : stock) {
+                final Product p = ps.getProduct();
+                final String name = p.getName().toLowerCase();
+                final String type = p.getType().toLowerCase();
+                
+                if (name.contains(lowerCaseTerm) || type.contains(lowerCaseTerm)) {
+                    matches.add(p);
+                }
+            }
+            
+            System.out.println("Contador de coincidencias = " + matches.size());
+            oos.writeObject(matches);
+            oos.flush();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error en manejador de busqueda");
+        }
+    }
+    
     private static ProductStock getProductById(int productId) {
         for (ProductStock ps : stock) {
             final int id = ps.getProduct().getProductId();

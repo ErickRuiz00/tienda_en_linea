@@ -80,7 +80,7 @@ public class CartGUI extends JFrame {
         row.add(new JLabel(Utils.formatPrice(price)));
         row.add(new JLabel(Utils.formatPrice(total)));
 
-        JPanel actions = new JPanel();
+        JPanel actions = new JPanel(new GridLayout(3, 1));
         JButton addBtn = new JButton("+");
         JButton reduceBtn = new JButton("-");
         JButton removeBtn = new JButton("Eliminar");
